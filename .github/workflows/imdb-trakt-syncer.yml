@@ -1,0 +1,31 @@
+YAML
+name: IMDB-Trakt-Syncer
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install imdb-trakt-syncer
+
+      - name: Run IMDB-Trakt-Syncer
+        env:
+          TRAKT_CLIENT_ID: ${{ secrets.TRAKT_CLIENT_ID }}
+          TRAKT_CLIENT_SECRET: ${{ secrets.TRAKT_CLIENT_SECRET }}
+          IMDB_COOKIE: ${{ secrets.IMDB_COOKIE }}
+        run: |
+          imdb-trakt-syncer
